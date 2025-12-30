@@ -101,7 +101,7 @@ var NEATOCAL_PARAM = {
   "show_moon_phase": false,
   "moon_phase_style": "css",  // "css", "symbol", "name"
   "moon_phase_position": "below",  // "below", "inline"
-  "moon_phase_display": "changes"  // "all", "changes"
+  "moon_phase_display": "changes",  // "all", "changes"
   // show week numbers
   //
   "show_week_numbers": false
@@ -378,6 +378,9 @@ function neatocal_hallon_almanackan() {
 
           td.appendChild(txt);
         }
+
+        // Add moon phase if enabled
+        renderMoonPhase(td, cur_year, cur_mo, idx+1);
 
       }
       tr.appendChild(td);
