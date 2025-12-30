@@ -32,7 +32,7 @@ Parameters
 | `language` | Change the language for month and day codes. Values will be overridden if `month_code` or `language_code` is specified. | [...?language=ko-KR](https://abetusk.github.io/neatocal?language=ko-KR) |
 | `weekday_code` | Comma separated list of weekday codes to use (default `Su,M,T,W,R,F,Sa`). Elements can be blank if no weekday code is wanted. | [...?weekday_code=S,M,T,W,T,F,S](https://abetusk.github.io/neatocal?weekday_code=S,M,T,W,T,F,S) |
 | `month_code` | Comma separated list of month codes to use (default `Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec`). Elements can be blank if no month code is wanted. | [...?month_code=J,F,M,A,M,J,J,A,S,O,N,D](https://abetusk.github.io/neatocal?month_code=J,F,M,A,M,J,J,A,S,O,N,D) |
-| `weekend_days` | Comma separated list of days weekend falls on (0=Sun, 1=Mon, ..., 6=Sat). Default to `[0,6]`. | [...?weekend_days=5,6](https://abetusk.github.io/neatocal?weekend_days=5,6) |
+| `weekend_days` | Comma separated list of days weekend falls on (0=Sun, 1=Mon, ..., 6=Sat). Default to `0,6`. | [...?weekend_days=5,6](https://abetusk.github.io/neatocal?weekend_days=5,6) |
 | `cell_height` | CSS parameter to alter cell height. | [...?cell_height=1.5em](https://abetusk.github.io/neatocal?cell_height=1.5em) |
 | `show_moon_phase` | Display moon phases on calendar (default `false`). | [...?show_moon_phase=true](https://abetusk.github.io/neatocal?show_moon_phase=true) |
 | `moon_phase_style` | Moon phase display style: `css` (default), `symbol`, or `name`. | [...?show_moon_phase=true&moon_phase_style=symbol](https://abetusk.github.io/neatocal?show_moon_phase=true&moon_phase_style=symbol) |
