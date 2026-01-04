@@ -9,6 +9,15 @@ This is a JavaScript port with added parameters (see below) and designed to be "
 
 Here's a [live demo](https://abetusk.github.io/neatocal).
 
+Scheduling MSK-MATCH prospective study
+---
+
+Made some customizations to this code to support creation of a study schedule for MSK-MATCH prospective study. To view, navigate to neatocal.html with the following url parameters:
+
+```
+neatocal.html?layout=hallon-almanackan&title=MSK-MATCH%20Breast%20Radiation%20Oncology%20Study%20Schedule%20(2026)&show_legend=true&legend_intervention=Intervention%20week&legend_control=Control%20week
+```
+
 Screenshots
 ---
 

@@ -64,6 +64,16 @@ var NEATOCAL_PARAM = {
   //
   "year": new Date().getFullYear(),
 
+  // Custom title for the calendar (overrides year display)
+  //
+  "title": "",
+
+  // Show legend for intervention/control
+  //
+  "show_legend": false,
+  "legend_intervention": "Intervention",
+  "legend_control": "Control",
+
   // Text to use for displaying weekdays
   //
   "weekday_code" : [ "Su", "M", "T", "W", "R", "F", "Sa"  ],
@@ -433,8 +443,12 @@ function neatocal_hallon_almanackan() {
   // Precompute the parity of week the day falls on.
   // Calendar is month major order, making it more difficult
   // to calculate the parity of week the day falls in.
+  // Using 4-week blocks instead of alternating weeks.
+  // Starting with the week of 1/5/2025 as the first highlighted block.
   //
-  let week_parity = 0;
+  let reference_date = new Date(2025, 0, 5); // Jan 5, 2025 (Sunday)
+  let week_counter = 0;
+  let week_parity = 1; // Start with highlighted block
   let day_parity = {};
   for (let i_mo = start_mo; i_mo < (start_mo+n_mo); i_mo++) {
 
@@ -449,12 +463,14 @@ function neatocal_hallon_almanackan() {
     for (let day_idx=0; day_idx < 31; day_idx++) {
       if (day_idx >= nday_in_mo) { break; }
 
-      day_parity[i_mo][day_idx] = week_parity;
-
       let dt = new Date(cur_year, cur_mo, day_idx+1);
-      if (dt.getDay() == 0) {
-        week_parity = 1-week_parity;
-      }
+      
+      // Calculate weeks since reference date
+      let days_diff = Math.floor((dt - reference_date) / (1000 * 60 * 60 * 24));
+      let weeks_since_ref = Math.floor(days_diff / 7);
+      let four_week_block = Math.floor(weeks_since_ref / 4) % 2;
+      
+      day_parity[i_mo][day_idx] = four_week_block;
 
     }
   }
@@ -490,7 +506,8 @@ function neatocal_hallon_almanackan() {
 
         let d = NEATOCAL_PARAM.weekday_code[ dt.getDay() ];
 
-        if (day_parity[i_mo][idx]) {
+        // Only highlight Monday-Friday (1-5) in the 4-week blocks
+        if (day_parity[i_mo][idx] && dt.getDay() >= 1 && dt.getDay() <= 5) {
           td.classList.add("weekend");
         }
 
@@ -512,8 +529,7 @@ function neatocal_hallon_almanackan() {
 
         //if (dt.getDay() == 0) {
         if (NEATOCAL_PARAM.weekend_days.includes(dt.getDay())) {
-          span_date.style.color = "rgb(230,37,7)";
-          span_day.style.color = "rgb(230,37,7)";
+          // Removed red color formatting for Sundays
           weekend_styles(span_day);
           weekend_date_styles(span_date);
         }
@@ -528,7 +544,6 @@ function neatocal_hallon_almanackan() {
         if ((dt.getDay() == 1) && NEATOCAL_PARAM.show_week_numbers) {
           let span_week_no = H.span(getISOWeekNumber(dt), "date");
           span_week_no.style.float = "right";
-          span_week_no.style.color = "rgb(230,37,7)";
           week_styles(span_week_no);
           td.appendChild(span_week_no);
         }
@@ -1002,6 +1017,10 @@ function neatocal_init() {
 
   let help_param = sp.get("help");
   let year_param = sp.get("year");
+  let title_param = sp.get("title");
+  let show_legend_param = sp.get("show_legend");
+  let legend_intervention_param = sp.get("legend_intervention");
+  let legend_control_param = sp.get("legend_control");
   let layout_param = sp.get("layout");
   let start_month_param = sp.get("start_month");
   let n_month_param = sp.get("n_month");
@@ -1071,6 +1090,37 @@ function neatocal_init() {
     year = year_param;
   }
   NEATOCAL_PARAM.year = year;
+
+  //---
+
+  if ((title_param != null) &&
+      (typeof title_param !== "undefined")) {
+    NEATOCAL_PARAM.title = decodeURIComponent(title_param);
+  }
+
+  //---
+
+  if ((show_legend_param != null) &&
+      (typeof show_legend_param !== "undefined")) {
+    NEATOCAL_PARAM.show_legend = (show_legend_param === "true" || show_legend_param === "1");
+  }
+
+  if ((legend_intervention_param != null) &&
+      (typeof legend_intervention_param !== "undefined")) {
+    NEATOCAL_PARAM.legend_intervention = decodeURIComponent(legend_intervention_param);
+  }
+
+  if ((legend_control_param != null) &&
+      (typeof legend_control_param !== "undefined")) {
+    NEATOCAL_PARAM.legend_control = decodeURIComponent(legend_control_param);
+  }
+
+  if (NEATOCAL_PARAM.show_legend) {
+    let ui_legend = document.getElementById("ui_legend");
+    ui_legend.style.display = "block";
+    document.getElementById("ui_legend_intervention").innerHTML = NEATOCAL_PARAM.legend_intervention;
+    document.getElementById("ui_legend_control").innerHTML = NEATOCAL_PARAM.legend_control;
+  }
 
   //---
 
@@ -1335,11 +1385,12 @@ function neatocal_render() {
   let ui_year = document.getElementById("ui_year");
   ui_year.innerHTML = "";
 
-  for ( let y = s_year, idx = 0; y <= e_year; y++, idx++) {
+  // If custom title is set, use it instead of year
+  if (NEATOCAL_PARAM.title && NEATOCAL_PARAM.title.length > 0) {
     let span = H.span();
-    span.innerHTML = y.toString();
+    span.innerHTML = NEATOCAL_PARAM.title;
     span.style["display"] = "inline-block";
-    span.style["width"] = (100*year_fraction[idx]).toString() + "%";
+    span.style["width"] = "100%";
     span.style["justify-content"] = "center";
     span.style["text-align"] = "center";
     span.style["margin"] = "0 0 .5em 0";
@@ -1347,6 +1398,21 @@ function neatocal_render() {
     year_styles(span);
 
     ui_year.appendChild( span );
+  }
+  else {
+    for ( let y = s_year, idx = 0; y <= e_year; y++, idx++) {
+      let span = H.span();
+      span.innerHTML = y.toString();
+      span.style["display"] = "inline-block";
+      span.style["width"] = (100*year_fraction[idx]).toString() + "%";
+      span.style["justify-content"] = "center";
+      span.style["text-align"] = "center";
+      span.style["margin"] = "0 0 .5em 0";
+
+      year_styles(span);
+
+      ui_year.appendChild( span );
+    }
   }
 
   //---

@@ -26,7 +26,7 @@ SOFTWARE.
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Neato Calendar</title>
+<title>MSK-MATCH Breast Radiation Oncology Prospective Study Schedule</title>
 
 <meta property="og:title" content="Neat Calendar">
 <meta property="og:description" content="A simple printable calendar with the full year on a single page">
@@ -87,8 +87,20 @@ SOFTWARE.
 
 
 
-  <div id='ui_year' style='width:100%;'>
-      <span style='display:inline-block; width:100%; justify-content:center; text-align:center; margin: 0 0 .5em 0;'>YYYY</span>
+  <div style='width:100%; position:relative; margin: 0 0 .5em 0;'>
+      <div id='ui_year' style='text-align:center;'>
+          <span style='display:inline-block;'>YYYY</span>
+      </div>
+      <div id='ui_legend' style='display:none; position:absolute; top:0; right:0; font-size: 0.8em; white-space: nowrap;'>
+          <span style='display:inline-block; margin-right: 1em;'>
+            <span style='display:inline-block; width:1.5em; height:1em; background:#a5d8ff; border:1px solid #888; vertical-align:middle; margin-right:0.3em;'></span>
+            <span id='ui_legend_intervention'>Intervention</span>
+          </span>
+          <span style='display:inline-block;'>
+            <span style='display:inline-block; width:1.5em; height:1em; background:#fff; border:1px solid #888; vertical-align:middle; margin-right:0.3em;'></span>
+            <span id='ui_legend_control'>Control</span>
+          </span>
+      </div>
   </div>
 
   <table id='ui_table'>
